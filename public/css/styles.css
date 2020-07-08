@@ -14,27 +14,50 @@ body{
   position: relative;
 }
 
-.navbar-nav {
-  flex-direction: row;
-}
-
 .navbar-nav li a {
-  color: #777;
-  text-decoration: none;
-  padding: 0 15px;
+  margin: 0 0 0 15px;
+  transition: underline 0.4 ease;
+  position: relative;
 }
 
 .navbar-nav li a:hover {
   color: #1abc9c !important;
-  text-decoration: none;
+}
+
+.navbar li a:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: #1abc9c;
+  visibility: hidden;
+  transform: scaleX(0);
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar li a:hover:before {
+  visibility: visible;
+  transform: scaleX(1);
+}
+
+@media (max-width : 992px) {
+  .navbar li a::before{
+    background-color: #f8f9fa;
+  }
+
+  .navbar li a:hover{
+    font-weight: 500;
+  }
 }
 
 .navbar-brand {
-  color: #777;
+  color: #777 !important;
 }
 
 .navbar-brand:hover{
-  color: #333;
+  color: #333 !important;
 }
 
 .footer-padding {
@@ -78,4 +101,30 @@ input[type = "text"]:focus, textarea[name = "newPara"]:focus{
 .card{
   border: 0;
   box-shadow:  0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+
+p > a.anchor{
+  text-decoration: none;
+  color: #1abc9c ;
+  transition: underline 0.4 ease;
+  position: relative;
+}
+
+a.anchor:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: #1abc9c;
+  visibility: hidden;
+  transform: scaleX(0);
+  transition: all 0.3s ease-in-out;
+}
+
+a.anchor:hover:before {
+  visibility: visible;
+  transform: scaleX(1);
 }
