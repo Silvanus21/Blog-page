@@ -1,3 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto&display=swap');
+
+body{
+  font-family: "roboto", sans-serif;
+}
 
 .navbar {
   padding-top: 15px;
@@ -98,6 +103,10 @@ input[type = "text"]:focus, textarea[name = "newPara"]:focus{
     box-shadow: none;
 }
 
+.btn{
+  margin-bottom: 35px;
+}
+
 .card{
   border: 0;
   box-shadow:  0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -107,24 +116,22 @@ input[type = "text"]:focus, textarea[name = "newPara"]:focus{
 p > a.anchor{
   text-decoration: none;
   color: #1abc9c ;
-  transition: underline 0.4 ease;
   position: relative;
 }
 
 a.anchor:before {
   content: "";
   position: absolute;
-  width: 100%;
+  width: 0;
   height: 1px;
   bottom: 0;
   left: 0;
   background-color: #1abc9c;
   visibility: hidden;
-  transform: scaleX(0);
   transition: all 0.3s ease-in-out;
 }
 
 a.anchor:hover:before {
+  width: 100%;
   visibility: visible;
-  transform: scaleX(1);
 }

@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
-const morgan = require("morgan");
+const mongoose = require("mongoose")
 const _ = require("lodash");
-let contentArray = [];
+
 
 const homeStartingContent =
   "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
@@ -18,17 +18,42 @@ const app = express();
 
 app.set("view engine", "ejs");
 
-app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 
-//routes..
+//connecting to DB
+mongoose.connect("mongodb://localhost:27017/contentDB", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+  .then(() => {
+    console.log("DB connected");
+  })
+  .catch((err) => {
+    console.log(err.message);
+  })
 
+//creating new schema..
+const contentSchema = new mongoose.Schema({
+  title: String,
+  paragraph: String
+})
+
+
+//creating model...
+const Content = new mongoose.model("Content", contentSchema)
+
+
+//routes..
 app.get("/", (req, res) => {
-  res.render("home", {
-    homeStartingContent: homeStartingContent,
-    contentArray: contentArray,
-  });
+
+  Content.find({}, (err, content) => {
+    res.render("home", {
+      homeStartingContent: homeStartingContent,
+      contentArray: content,
+    });
+  })
+
 });
 
 app.get("/about", (req, res) => {
@@ -44,27 +69,31 @@ app.get("/compose", (req, res) => {
 });
 
 app.post("/compose", (req, res) => {
-  const newItem = {
+  
+  const newItem = new Content({
     title: req.body.newTitle,
-    paragraph: req.body.newPara,
-  };
+    paragraph: req.body.newPara
+  })
 
-  contentArray.push(newItem);
+  newItem.save(err => {
+      if(!err){
+        res.redirect("/");
+      }
+  })
 
-  res.redirect("/");
 });
 
-app.get("/posts/:title", (req, res) => {
+app.get("/posts/:contentId", (req, res) => {
 
-  const title = _.lowerCase(req.params.title)
+  const contentId = req.params.contentId
 
-  contentArray.forEach((element) => {
+  Content.findOne({_id : contentId}, (err, foundContent) => {
+      res.render("post", {
+          heading : foundContent.title,
+          content : foundContent.paragraph
+      })
+  })
 
-    if ( title === _.lowerCase(element.title)) {
-      res.render("post", {heading: element.title, content: element.paragraph})
-    } 
-
-  });
 });
 
 // serving the page
